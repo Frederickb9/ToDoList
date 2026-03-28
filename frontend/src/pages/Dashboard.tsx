@@ -1,12 +1,15 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TaskForm } from '../components/tasks/TaskForm';
 import { TaskList } from '../components/tasks/TaskList';
+import { useAuthStore } from '../store/auth.store';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
 });
 
 export const Dashboard = () => {
+  const { user, logout } = useAuthStore();
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="min-h-screen bg-slate-50">
@@ -14,12 +17,20 @@ export const Dashboard = () => {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <div>
               <h1 className="text-xl font-bold text-slate-900 tracking-tight">My Tasks</h1>
-              <p className="text-xs text-slate-500 mt-0.5">Organiza tus actividades por prioridad</p>
+              <p className="text-xs text-slate-500 mt-0.5">Hola, {user?.name}</p>
             </div>
-            <div className="flex gap-1">
-              {(['critical', 'high', 'medium', 'low'] as const).map((p) => (
-                <div key={p} className={`w-2.5 h-2.5 rounded-full ${{ critical: 'bg-red-400', high: 'bg-amber-400', medium: 'bg-indigo-400', low: 'bg-slate-400' }[p]}`} />
-              ))}
+            <div className="flex items-center gap-4">
+              <div className="flex gap-1">
+                {(['critical', 'high', 'medium', 'low'] as const).map((p) => (
+                  <div key={p} className={`w-2.5 h-2.5 rounded-full ${{ critical: 'bg-red-400', high: 'bg-amber-400', medium: 'bg-indigo-400', low: 'bg-slate-400' }[p]}`} />
+                ))}
+              </div>
+              <button
+                onClick={logout}
+                className="text-xs text-slate-500 hover:text-red-600 font-medium transition"
+              >
+                Cerrar sesión
+              </button>
             </div>
           </div>
         </header>
