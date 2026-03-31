@@ -29,72 +29,76 @@ export const Register = ({ onSwitch }: RegisterProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">My Tasks</h1>
-          <p className="text-slate-500 mt-2 text-sm">Crea tu cuenta para empezar</p>
+    <div className="min-h-screen bg-stone-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-sage-100 rounded-2xl mb-4">
+            <svg className="w-6 h-6 text-sage-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-semibold text-stone-800 tracking-tight">Crear cuenta</h1>
+          <p className="text-stone-400 text-sm mt-1">Empieza a organizar tus tareas hoy</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded-xl p-8 shadow-sm space-y-4">
+        <div className="card p-8">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg">
+            <div className="bg-rose-50 border border-rose-200 text-rose-600 text-sm px-4 py-3 rounded-xl mb-5">
               {error}
             </div>
           )}
 
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">Nombre</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              placeholder="Tu nombre"
-              className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-stone-500 uppercase tracking-wide">Nombre</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                placeholder="Tu nombre"
+                className="input-field"
+              />
+            </div>
 
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="tu@email.com"
-              className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-            />
-          </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-stone-500 uppercase tracking-wide">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="tu@email.com"
+                className="input-field"
+              />
+            </div>
 
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">Contraseña</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              placeholder="Mínimo 6 caracteres"
-              className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-            />
-          </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-medium text-stone-500 uppercase tracking-wide">Contraseña</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+                placeholder="Mínimo 6 caracteres"
+                className="input-field"
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white text-sm font-medium rounded-lg transition focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-          >
-            {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
-          </button>
+            <button type="submit" disabled={isLoading} className="btn-primary w-full mt-2">
+              {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
+            </button>
+          </form>
 
-          <p className="text-center text-sm text-slate-500">
+          <p className="text-center text-sm text-stone-400 mt-6">
             ¿Ya tienes cuenta?{' '}
-            <button type="button" onClick={onSwitch} className="text-indigo-600 hover:text-indigo-800 font-medium">
+            <button type="button" onClick={onSwitch} className="text-sage-600 hover:text-sage-700 font-medium transition-colors duration-250">
               Inicia sesión
             </button>
           </p>
-        </form>
+        </div>
       </div>
     </div>
   );

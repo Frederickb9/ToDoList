@@ -4,17 +4,23 @@ import { PRIORITY_CONFIG } from '../../utils/priority.utils';
 import { useUpdateTask, useDeleteTask } from '../../hooks/useTasks';
 
 const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
-  { value: 'pending', label: 'Pendiente' },
+  { value: 'pending',     label: 'Pendiente' },
   { value: 'in_progress', label: 'En progreso' },
-  { value: 'completed', label: 'Completada' },
+  { value: 'completed',   label: 'Completada' },
 ];
 
 const PRIORITY_OPTIONS: { value: Priority; label: string }[] = [
-  { value: 'low', label: 'Baja' },
-  { value: 'medium', label: 'Media' },
-  { value: 'high', label: 'Alta' },
+  { value: 'low',      label: 'Baja' },
+  { value: 'medium',   label: 'Media' },
+  { value: 'high',     label: 'Alta' },
   { value: 'critical', label: 'Crítica' },
 ];
+
+const STATUS_LABEL: Record<TaskStatus, string> = {
+  pending:     'Pendiente',
+  in_progress: 'En progreso',
+  completed:   'Completada',
+};
 
 export const TaskCard = ({ task }: { task: Task }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -29,6 +35,7 @@ export const TaskCard = ({ task }: { task: Task }) => {
   const { mutate: deleteTask, isPending: isDeleting } = useDeleteTask();
   const config = PRIORITY_CONFIG[task.priority];
   const isOptimistic = task.id < 0;
+  const isCompleted = task.status === 'completed';
 
   const handleSave = () => {
     updateTask({ id: task.id, payload: editData }, { onSuccess: () => setIsEditing(false) });
@@ -40,48 +47,41 @@ export const TaskCard = ({ task }: { task: Task }) => {
 
   if (isEditing) {
     return (
-      <div className="bg-white border border-indigo-200 rounded-xl p-4 shadow-sm space-y-3">
+      <div className="card border-l-4 border-l-sage-300 p-5 space-y-3">
         <input
           value={editData.title}
           onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-          className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="input-field font-medium"
           placeholder="Título"
         />
         <textarea
           value={editData.description}
           onChange={(e) => setEditData({ ...editData, description: e.target.value })}
           rows={2}
-          className="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+          className="input-field resize-none text-sm"
           placeholder="Descripción"
         />
         <div className="grid grid-cols-2 gap-2">
           <select
             value={editData.priority}
             onChange={(e) => setEditData({ ...editData, priority: e.target.value as Priority })}
-            className="px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="input-field text-sm"
           >
             {PRIORITY_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
           <select
             value={editData.status}
             onChange={(e) => setEditData({ ...editData, status: e.target.value as TaskStatus })}
-            className="px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="input-field text-sm"
           >
             {STATUS_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={handleSave}
-            disabled={isUpdating}
-            className="flex-1 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white text-sm font-medium rounded-lg transition"
-          >
-            {isUpdating ? 'Guardando...' : 'Guardar'}
+        <div className="flex gap-2 pt-1">
+          <button onClick={handleSave} disabled={isUpdating} className="btn-primary flex-1 text-xs py-2">
+            {isUpdating ? 'Guardando...' : 'Guardar cambios'}
           </button>
-          <button
-            onClick={() => setIsEditing(false)}
-            className="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition"
-          >
+          <button onClick={() => setIsEditing(false)} className="btn-ghost flex-1 text-xs py-2">
             Cancelar
           </button>
         </div>
@@ -90,43 +90,56 @@ export const TaskCard = ({ task }: { task: Task }) => {
   }
 
   return (
-    <div className={`bg-white border-l-4 ${config.borderClass} border border-slate-200 rounded-xl p-4 shadow-sm ${isOptimistic ? 'opacity-60 animate-pulse' : ''}`}>
+    <div className={`card border-l-4 ${config.borderClass} p-5 group
+      hover:shadow-medium hover:-translate-y-0.5 transition-all duration-250
+      ${isOptimistic ? 'opacity-50' : ''}
+      ${isCompleted ? 'opacity-70' : ''}`}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <p className={`text-sm font-semibold text-slate-800 truncate ${task.status === 'completed' ? 'line-through text-slate-400' : ''}`}>
+          <p className={`text-sm font-medium text-stone-700 leading-snug
+            ${isCompleted ? 'line-through text-stone-400' : ''}`}>
             {task.title}
           </p>
           {task.description && (
-            <p className="text-xs text-slate-500 mt-1 line-clamp-2">{task.description}</p>
+            <p className="text-xs text-stone-400 mt-1.5 leading-relaxed line-clamp-2">
+              {task.description}
+            </p>
           )}
         </div>
         <span className={`shrink-0 text-xs font-medium px-2.5 py-1 rounded-full ${config.badgeClass}`}>
           {config.label}
         </span>
       </div>
-      <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
-        <span className="text-xs text-slate-400">
-          {{ pending: 'Pendiente', in_progress: 'En progreso', completed: 'Completada' }[task.status]}
-        </span>
+
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-stone-100">
+        <div className="flex items-center gap-1.5">
+          <div className={`w-1.5 h-1.5 rounded-full ${config.dotClass}`} />
+          <span className="text-xs text-stone-400">{STATUS_LABEL[task.status]}</span>
+        </div>
+
         {!isOptimistic && (
-          <div className="flex gap-2">
+          <div className="flex gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-250">
             <button
               onClick={() => setIsEditing(true)}
-              className="text-xs text-indigo-600 hover:text-indigo-800 font-medium transition"
+              className="text-xs text-stone-400 hover:text-sage-600 font-medium transition-colors duration-250"
             >
               Editar
             </button>
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="text-xs text-red-500 hover:text-red-700 font-medium transition"
+              className="text-xs text-stone-400 hover:text-rose-500 font-medium transition-colors duration-250"
             >
               {isDeleting ? '...' : 'Eliminar'}
             </button>
           </div>
         )}
       </div>
-      {isOptimistic && <p className="text-xs text-indigo-400 mt-1">Guardando...</p>}
+
+      {isOptimistic && (
+        <p className="text-xs text-sage-400 mt-2">Guardando...</p>
+      )}
     </div>
   );
 };

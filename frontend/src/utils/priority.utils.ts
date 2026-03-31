@@ -1,24 +1,40 @@
 import { Priority } from '../types/task.types';
 
-export const PRIORITY_CONFIG: Record<Priority, { label: string; badgeClass: string; borderClass: string; }> = {
+interface PriorityConfig {
+  label: string;
+  badgeClass: string;
+  borderClass: string;
+  dotClass: string;
+  bgClass: string;
+}
+
+export const PRIORITY_CONFIG: Record<Priority, PriorityConfig> = {
   low: {
     label: 'Baja',
-    badgeClass: 'bg-slate-100 text-slate-700 border border-slate-200',
-    borderClass: 'border-l-slate-400',
+    badgeClass: 'bg-stone-100 text-stone-500 border border-stone-200',
+    borderClass: 'border-l-stone-300',
+    dotClass: 'bg-stone-300',
+    bgClass: 'bg-stone-50',
   },
   medium: {
     label: 'Media',
-    badgeClass: 'bg-indigo-50 text-indigo-700 border border-indigo-200',
-    borderClass: 'border-l-indigo-400',
+    badgeClass: 'bg-sage-50 text-sage-600 border border-sage-200',
+    borderClass: 'border-l-sage-300',
+    dotClass: 'bg-sage-300',
+    bgClass: 'bg-sage-50',
   },
   high: {
     label: 'Alta',
-    badgeClass: 'bg-amber-50 text-amber-700 border border-amber-200',
-    borderClass: 'border-l-amber-400',
+    badgeClass: 'bg-amber-50 text-amber-600 border border-amber-200',
+    borderClass: 'border-l-amber-300',
+    dotClass: 'bg-amber-300',
+    bgClass: 'bg-amber-50',
   },
   critical: {
     label: 'Crítica',
-    badgeClass: 'bg-red-50 text-red-700 border border-red-200',
-    borderClass: 'border-l-red-400',
+    badgeClass: 'bg-rose-50 text-rose-500 border border-rose-200',
+    borderClass: 'border-l-rose-300',
+    dotClass: 'bg-rose-300',
+    bgClass: 'bg-rose-50',
   },
 };
